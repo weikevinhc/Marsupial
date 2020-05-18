@@ -11,3 +11,9 @@ Download the package MarSuPial_1.0.tar.gz and install using command line:
 
 Then, in R, load the package:
     <p>> library(MarSuPial)</p>
+
+OR Install in R by first extracting the tar ball and:
+    <p>> install.packages(MarSuPial)</p>
+    <p>> library(MarSuPial)</p>
+
+__Usage__
