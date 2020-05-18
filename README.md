@@ -72,3 +72,6 @@ Takes the vector of allele frequency and simulates read counts for each. Returns
 
 D2WGSsim(D, fitness, n, dp, mendel_rate)<br>
 A rough and fast way to simulate allele frequency from read count data given recombinant fraction (D) and fitnesss differential. For each D, a binomial sampling process is used to determine the number of alleles in the pool, followed by sequnece depth smapling by poisson, and then another binomial for the read count of the allele. This should only be applied when n is large (>1000) as it samples the allele frequency at each site independently. 
+
+###Examples:
+See the Rmarkdown file for examples.
