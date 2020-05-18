@@ -5,6 +5,7 @@ Marker selected pools are pooled-sequencing of marker selected offsprings from a
 MarSuPial also simulates read count data for allele-frequency decay provided the chromosome-wide recombination rate.  
 
 Installation
+
 Download the package MarSuPial_1.0.tar.gz and install using command line:
     <p>$ R CMD INSTALL MarSuPial_1.0.tar.gz</p>
 
