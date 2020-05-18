@@ -17,7 +17,7 @@ OR Install in R by first extracting the tar ball and:
     <p>> library(MarSuPial)</p>
 
 ## Usage
-The MarSuPial package contains a collection of functions to analyzing, estimating, and simulating recombination in a two generation backcross.
+The MarSuPial package contains a collection of functions to analyzing, estimating, and simulating recombination in a two generation backcross. Refer to the MarSuPial_scripts folder for the code.
 
 ### Analytical relationships:
 r2d.locus(rate, l, size, pos, start, end)<br>
