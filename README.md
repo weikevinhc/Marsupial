@@ -59,3 +59,16 @@ Takes an AFfit object from AFfitsplines, and generates the slope of the allele f
 
 d2rslope(d, sites, locus)<br>
 Converts genetic distance to recombination rate by taking the slope of the former in discrete intervals. Regions to the left and right of the selected locus is expected to have negative and positive slopes. So slopes of regions left of the locus are multiplied by -1. 
+
+### Crossover simulations of two generation recombinant backcross:
+COsim(r2d, fintess, n, trials)<br>
+Takes the output of r2d.locus, and simulates crossing over for n number of chromosomes and repeated trials number of times, given different fitness differential (fitness must be between -1 and 1). Produces a matrix of allele frequency where each row is a site in the r2d list, and each column is a trial. Allele frequency here refers to true allele frequency in the pool. This simulation method assumes no crossover interference.
+
+COsim.ind(r2d, fitness, n)<br>
+Instead of generating the chromosome-wide allele frequency of a pool, this function generates a matrix of the genotypes of individual chromosomes where each row is position and each column an individual (True and False for the two allele states). This is equivalent to using COsim with n = 1, but is much faster.
+
+AF2WGSsim(AF, dp)<br>
+Takes the vector of allele frequency and simulates read counts for each. Returns a list object with counts of the allele and depth of the site. Depth is randomly sampled using a Poisson process with mean of dp. The allele frequency is sampled with binomial. 
+
+D2WGSsim(D, fitness, n, dp, mendel_rate)<br>
+A rough and fast way to simulate allele frequency from read count data given recombinant fraction (D) and fitnesss differential. For each D, a binomial sampling process is used to determine the number of alleles in the pool, followed by sequnece depth smapling by poisson, and then another binomial for the read count of the allele. This should only be applied when n is large (>1000) as it samples the allele frequency at each site independently. 
