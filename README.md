@@ -15,6 +15,8 @@ Then, in R, load the package:
 
     > library(MarSuPial)
 
+
+
 OR Install in R by first extracting the tar ball and:
 
     > install.packages(MarSuPial)
