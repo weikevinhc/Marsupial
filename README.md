@@ -28,12 +28,19 @@ The MarSuPial package contains a collection of functions to analyzing, estimatin
 ### Analytical relationships:
 
     r2d.locus(rate, l, size, pos, start, end)
-    Returns a list of the chromosome-wide windows and the recombination rate and genetic distance in cM from a locus (l). Rate (in cM/Mb) must be either a r function describing the relationship between recombination rate or chromosome position or a bed file (loaded as a dataframe) of equally sized chromosome windows. If pos (in Mb) is a single value, it is used as the window size of evenly spaced non-overlapping windows. If pos (in Mb) is a vector of numbers, they are used as positions to determine rate and distance. If a recombination rate map function is provided, the start and end positions of the recombination rate can also be inputted; positions < start and > end will have rates of 0 to emulate heterochromatic/centromeric/telomeric suppression.
+    
+Returns a list of the chromosome-wide windows and the recombination rate and genetic distance in cM from a locus (l). Rate (in cM/Mb) must be either a r function describing the relationship between recombination rate or chromosome position or a bed file (loaded as a dataframe) of equally sized chromosome windows. If pos (in Mb) is a single value, it is used as the window size of evenly spaced non-overlapping windows. If pos (in Mb) is a vector of numbers, they are used as positions to determine rate and distance. If a recombination rate map function is provided, the start and end positions of the recombination rate can also be inputted; positions < start and > end will have rates of 0 to emulate heterochromatic/centromeric/telomeric suppression.
 
->```
->d2D(d, method)
->```
->Converts genetic distance (d) into recombinant fraction (D), using either the "haldane" or "kosambi" mapping functions (method).
+
+
+
+
+
+
+
+    d2D(d, method)
+
+Converts genetic distance (d) into recombinant fraction (D), using either the "haldane" or "kosambi" mapping functions (method).
 
 
     D2d(D, method)
