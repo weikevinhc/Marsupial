@@ -7,7 +7,8 @@ MarSuPial also simulates read count data for allele-frequency decay provided the
 ## Installation
 
 Download the package MarSuPial_1.0.tar.gz and install using command line:
-    <pre><code> $ R CMD INSTALL MarSuPial_1.0.tar.gz</code></pre>
+
+    $ R CMD INSTALL MarSuPial_1.0.tar.gz
    
 
 Then, in R, load the package:
