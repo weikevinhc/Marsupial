@@ -6,19 +6,20 @@ output: pdf_document
 Examples are provided to illustrate how to use `MarSuPial` to infer recombination rates, simulate crossovers and WGS, and infer allele frequency from marker selected pool count data.
 
 
-## Installation
-Make sure the package is loaded
+## Getting started
+Make sure the package is loaded.
 ```{r, eval=T}
 library("MarSuPial")
 ```
 
 ## Generate the expected X chromosome recombination rate
-We will first use the recombination rate from Fiston Lavier et al 2010 to generate genetic distance from an arbitray locus of 3Mb. We will first generate a function called rate_fun with the map function:
+We will first use the recombination rate from Fiston Lavier et al 2010 and create a variable for the recombination rate function:
+
 ```{r, eval=T}
 rate_function <- function(x){-0.03*x^2 + 0.6*x + 1.15}
 ```
 
-Then, we will generate the chromosome wide recombination rate and genetic distance in 0.01Mb windows. The size of the chromosome and start and end of the rates are provided.
+Then, we will generate the chromosome wide recombination rate and genetic distance from an arbitrary locus at 3Mb in 0.01Mb windows. We have to provide the size of the X chromosome, start and end of the rates. Note that the recombination rate function is in cM/Mb, so the units are all in Mb.
 ```{r, eval=T}
 example <- r2d.locus(rate_function, 3, pos = 0.01, size = 22.422827, start = 1.22, end = 21.21)
 ```
@@ -30,30 +31,30 @@ plot(example$pos, example$r, type = "l",
 
 ```
 
-What about the genetic distance:
+What about the genetic distance from the locus at 3Mb:
 ```{r, eval=T, fig.height = 4, fig.width = 4}
 plot(example$pos, example$d, type = "l", col = "red",
 		 ylab = "Genetic Distance (cM)", xlab = "positions (Mb)")
 
 ```
 
-Let's convert the genetic distance to recombinant fraction using the haldane mapping function. Remember, the unit for the mapping function is morgan while the unit is currently cM.
+Let's convert the genetic distance to recombinant fraction using the haldane mapping function with the d2D() function. The unit for the mapping function needs to be morgans while the unit is currently cM.
 ```{r, eval=T,fig.height = 4, fig.width = 4}
 exD <- d2D(example$d/100,  method = "haldane")
 plot(example$pos, example$d/100, type = "l", col = "red",
-		 ylab = "Genetic distnace (M)/Recombinant fraction", xlab = "positions (Mb)")
+		 ylab = "d in morgans or recombinant fraction", xlab = "positions (Mb)")
 points(example$pos, exD, type = "l", lty = 2, col = "red")
 ```
 
-What will the allele frequency look like given different fitness differentials at the locus (3Mb) for male pol?
+What will the allele frequency look like given different fitness differentials at the locus (3Mb) for male pools? Because the X chromosome if hemizygous in males, the ploidy parameter is haploid, and the expected mendelian rate given no selection is 0.5.
 ```{r, eval=T, fig.height = 4, fig.width = 4}
-plot(example$pos, D2AF(exD,fitness = 1, ploidy = "haploid", mendel_rate = 0.5), type = "l",
+plot(example$pos, D2AF(exD, fitness = 1, ploidy = "haploid", mendel_rate = 0.5), type = "l",
 		 ylim = c(0,1), ylab = "AF", xlab = "positions (Mb)")
-points(example$pos, D2AF(exD,fitness = 0, ploidy = "haploid", mendel_rate = 0.5), type = "l")
-points(example$pos, D2AF(exD,fitness = -1, ploidy = "haploid", mendel_rate = 0.5), type = "l")
+points(example$pos, D2AF(exD, fitness = 0, ploidy = "haploid", mendel_rate = 0.5), type = "l")
+points(example$pos, D2AF(exD, fitness = -1, ploidy = "haploid", mendel_rate = 0.5), type = "l")
 ```
 
-Let's try using estimated recombination rates from Comeron et al. 2012. Make sure the bed file is in your working directory.
+Let's try using estimated recombination rates from Comeron et al. 2012. The bed file can be found in the "sample_data" folder in github. Make sure the bed file is in your working directory.
 ```{r eval=T,fig.height = 4, fig.width = 4}
 com <- read.table("comeron_X.bed", header = F, sep = "\t")
 example2 <- r2d.locus(rate = com, l = 3, pos = 0.01, size = 22.422827)
@@ -73,12 +74,12 @@ plot(example3$pos, example3$d, col = "red", pch = 20, cex = 0.1,
 
 
 ## Simulate crossovers and whole genome sequencing
-So, now we have a r2d object (example, example2, and example3), let's try to simulate crossovers with them. We will first generate a pool of 100 individuals and observe the allele frequnecy in them.
+So, now we have a r2d object (example, example2, and example3), let's try to simulate crossovers with them. We will first generate a pool of 10 individuals and observe the allele frequnecy in them.
 ```{r eval=T,fig.height = 4, fig.width = 4}
 simmatrix <- COsim.ind(r2d = example2, n = 10, fitness = 1)
 D <- sapply(1:ncol(simmatrix), function(x){sum(simmatrix[,x])})/10
 plot(example2$pos, D, type = "l", ylim = c(0.5,1),
-		 xlab = "position", ylab = "Recombinant fraction")
+		 xlab = "position", ylab = "Allele frequency")
 ```
 
 Yikes, that doesn't look good. Let's increase the pool size!
@@ -86,14 +87,14 @@ Yikes, that doesn't look good. Let's increase the pool size!
 simmatrix <- COsim.ind(r2d = example2, n = 100, fitness = 1)
 D <- sapply(1:ncol(simmatrix), function(x){sum(simmatrix[,x])})/100
 plot(example2$pos, D, type = "l", ylim = c(0.5,1),
-		 xlab = "position", ylab = "Recombinant fraction")
+		 xlab = "position", ylab = "Allele frequency")
 simmatrix <- COsim.ind(r2d = example2, n = 1000, fitness = 1)
 D <- sapply(1:ncol(simmatrix), function(x){sum(simmatrix[,x])})/1000
 points(example2$pos, D, type = "l", ylim = c(0.5,1), col = "red")
 legend("topright", legend = c("n=100", "n=1000"), col = c("black", "red"), lty = 1)
 ```
 
-Now let's try simulating what the AF from 1000 individuals will look like if we sequneced it. Let's assume males are pooled and are sequenced to a coverage of 30x.
+Now, let's try simulating what the AF from 1000 individuals will look like if we sequneced it. We will assume males are pooled and the X is sequenced to a coverage of 30x.
 ```{r eval=T,fig.height = 4, fig.width = 4}
 WGSsimulation <- AF2WGSsim(AF = D, dp = 30)
 WGSAF <- WGSsimulation$counts/WGSsimulation$dp
@@ -102,7 +103,7 @@ plot(example2$pos, WGSAF, pch = 20, cex = 0.05, col = "dodgerblue",
 points(example2$pos, D, type = "l", col = "red")
 ```
 
-Now let's try females with coverage of 20x.
+Now let's try females with coverage of 20x. Because half of the X's in females are paternally contributed, we have to add their frequency into the simulated frequency.
 ```{r eval=T,fig.height = 4, fig.width = 4}
 WGSsimulation <- AF2WGSsim(AF = (D + 1)/2, dp = 20)
 WGSAF <- WGSsimulation$counts/WGSsimulation$dp
